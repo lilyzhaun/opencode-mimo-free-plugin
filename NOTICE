@@ -1,0 +1,19 @@
+This project adapts the MiMo free provider plugin implementation from MiMoCode:
+
+  https://github.com/XiaomiMiMo/MiMo-Code
+
+MiMoCode is licensed under the MIT License and includes the following copyright
+notice:
+
+  Copyright (c) 2026 MiMo Code, Xiaomi Corporation
+  Copyright (c) 2025 opencode
+
+The OpenCode project is licensed under the MIT License and includes the
+following copyright notice:
+
+  Copyright (c) 2025 opencode
+
+MiMo-hosted services are separate from the source-code license and may be
+subject to Xiaomi MiMo terms of service, use restrictions, trademark policies,
+rate limits, or availability changes. This plugin is not affiliated with or
+endorsed by Xiaomi, MiMoCode, or OpenCode unless stated by those projects.
