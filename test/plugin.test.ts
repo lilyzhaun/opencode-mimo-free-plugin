@@ -1,7 +1,14 @@
 import { describe, expect, test } from "bun:test"
-import { MimoFree, MimoFreeAuthPlugin, parseJwtExp } from "../src/index.js"
+import plugin, { MimoFree, MimoFreeAuthPlugin, parseJwtExp } from "../src/index.js"
 
 describe("MimoFreeAuthPlugin", () => {
+  test("exports an OpenCode v1 server plugin", () => {
+    expect(plugin).toEqual({
+      id: "opencode-mimo-free-plugin",
+      server: MimoFreeAuthPlugin,
+    })
+  })
+
   test("injects the mimo provider through the config hook", async () => {
     const hooks = await MimoFreeAuthPlugin()
     const config = {}

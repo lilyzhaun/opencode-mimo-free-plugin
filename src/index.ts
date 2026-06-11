@@ -201,4 +201,7 @@ export async function MimoFreeAuthPlugin(): Promise<Hooks> {
   }
 }
 
-export default MimoFreeAuthPlugin
+export default {
+  id: "opencode-mimo-free-plugin",
+  server: MimoFreeAuthPlugin,
+}
