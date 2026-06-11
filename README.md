@@ -6,7 +6,9 @@ OpenCode plugin that adds the MiMo Auto free provider. Zero API key required -- 
 
 ## Install
 
-Add the plugin to your OpenCode config (`opencode.json` or `opencode.jsonc`):
+### npm package install
+
+After this package is published to npm, add it to your OpenCode config (`opencode.json` or `opencode.jsonc`):
 
 ```jsonc
 {
@@ -17,6 +19,19 @@ Add the plugin to your OpenCode config (`opencode.json` or `opencode.jsonc`):
 ```
 
 OpenCode will install the npm package automatically on next launch.
+
+### Local file install
+
+Before npm publication, build the plugin and copy the built file into OpenCode's global plugin directory:
+
+```bash
+bun install
+bun run build
+mkdir -p ~/.config/opencode/plugins
+cp dist/index.js ~/.config/opencode/plugins/opencode-mimo-free-plugin.js
+```
+
+OpenCode automatically loads JavaScript files from `~/.config/opencode/plugins/` on startup.
 
 ## What it does
 
@@ -59,9 +74,17 @@ If you are an AI coding agent and the user asks you to install this plugin, foll
    - Project-level: `opencode.json` or `opencode.jsonc` in the project root.
    - Global: `~/.config/opencode/opencode.jsonc`.
 
-2. Add `"opencode-mimo-free-plugin"` to the `"plugin"` array. Create the array if it does not exist.
+2. If the npm package is published, add `"opencode-mimo-free-plugin"` to the `"plugin"` array. Create the array if it does not exist.
 
-3. Optionally set `"model": "mimo/mimo-auto"` to use MiMo Auto as the default model.
+3. If the npm package is not published yet, install it as a local global plugin instead:
+   ```bash
+   bun install
+   bun run build
+   mkdir -p ~/.config/opencode/plugins
+   cp dist/index.js ~/.config/opencode/plugins/opencode-mimo-free-plugin.js
+   ```
+
+4. Optionally set `"model": "mimo/mimo-auto"` to use MiMo Auto as the default model.
 
 Example minimal config:
 ```jsonc
@@ -81,8 +104,8 @@ Example adding to an existing config:
 }
 ```
 
-4. No API key or environment variable is required. The plugin handles authentication automatically.
+5. No API key or environment variable is required. The plugin handles authentication automatically.
 
-5. Restart OpenCode (or start a new session). The model `mimo/mimo-auto` will appear in the model list.
+6. Restart OpenCode (or start a new session). The model `mimo/mimo-auto` will appear in the model list.
 
-6. To verify: run `opencode models` and confirm `mimo/mimo-auto` is listed.
+7. To verify: run `opencode models` and confirm `mimo/mimo-auto` is listed.
