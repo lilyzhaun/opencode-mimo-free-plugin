@@ -130,7 +130,7 @@ async function bootstrap() {
   const response = await fetch(MimoFree.bootstrapUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ client: getClientFingerprint() }),
+    body: JSON.stringify({ client: getClientFingerprint(), deviceId: getClientFingerprint() }),
   })
   if (!response.ok) throw new Error(`mimo-free bootstrap failed: ${response.status} ${(await response.text()).slice(0, 200)}`)
 
