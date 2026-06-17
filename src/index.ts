@@ -35,6 +35,7 @@ type Hooks = {
 
 const DEFAULT_BASE_URL = "https://api.xiaomimimo.com/"
 const JWT_REFRESH_BUFFER_MS = 5 * 60_000
+const REQUIRED_SYSTEM_PROMPT = "You are MiMoCode, an interactive CLI tool that helps users with software engineering tasks."
 
 export const MimoFree = {
   baseUrl: normalizeBaseUrl(process.env.MIMO_FREE_BASE_URL || DEFAULT_BASE_URL),
@@ -157,17 +158,35 @@ function buildHeaders(init: RequestInit | undefined, jwt: string) {
   const headers = new Headers(init?.headers)
   headers.set("Authorization", `Bearer ${jwt}`)
   headers.set("X-Mimo-Source", "mimocode-cli-free")
+  if (!headers.has("x-session-affinity")) headers.set("x-session-affinity", `ses_${crypto.randomBytes(12).toString("hex")}`)
   return headers
+}
+
+function withRequiredSystemPrompt(init: RequestInit | undefined) {
+  if (typeof init?.body !== "string") return init
+
+  const body = JSON.parse(init.body) as { messages?: Array<{ role?: unknown; content?: unknown }> }
+  const hasPrompt = body.messages?.some((message) => typeof message.content === "string" && message.content.includes(REQUIRED_SYSTEM_PROMPT))
+  if (hasPrompt) return init
+
+  return {
+    ...init,
+    body: JSON.stringify({
+      ...body,
+      messages: [{ role: "system", content: REQUIRED_SYSTEM_PROMPT }, ...(body.messages ?? [])],
+    }),
+  }
 }
 
 export async function wrappedFetch(input: RequestInfo | URL, init?: RequestInit) {
   const url = typeof input === "string" || input instanceof URL ? String(input) : input.url
   const rewritten = url.replace(/\/chat\/completions(\?|$)/, "/chat$1")
-  const response = await fetch(rewritten, { ...init, headers: buildHeaders(init, await getJwt()) })
+  const requestInit = withRequiredSystemPrompt(init)
+  const response = await fetch(rewritten, { ...requestInit, headers: buildHeaders(requestInit, await getJwt()) })
   if (response.status !== 401 && response.status !== 403) return response
 
   cached = null
-  return fetch(rewritten, { ...init, headers: buildHeaders(init, await getJwt()) })
+  return fetch(rewritten, { ...requestInit, headers: buildHeaders(requestInit, await getJwt()) })
 }
 
 export async function MimoFreeAuthPlugin(): Promise<Hooks> {
